@@ -115,7 +115,7 @@ tNode* build_tree(char* _buf)
                 tNode* culNode = stack_top(&stack);
                 stack_pop(&stack);
 
-                // '(' ¸¸³µÀ¸¸é Å»Ãâ
+                // '(' ë§Œë‚¬ìœ¼ë©´ íƒˆì¶œ
                 if (!culNode)
                 {
                     break;
@@ -172,7 +172,7 @@ void release_tree(tNode* _culNode)
 
 void pre_order(tNode* _pNode, char* _Arr)
 {
-    // NULLÀÌ¸é ¹ÝÈ¯
+    // NULLì´ë©´ ë°˜í™˜
     if (!_pNode)
     {
         return;
@@ -191,7 +191,7 @@ void pre_order(tNode* _pNode, char* _Arr)
         _Arr[idx] = culNode->cData;
         ++idx;
 
-        //¿À¸¥ÂÊ ÀÚ½ÄÀÌ ÀÖ´Ù¸é ¸ÕÀú Çª½¬
+        //ì˜¤ë¥¸ìª½ ìžì‹ì´ ìžˆë‹¤ë©´ ë¨¼ì € í‘¸ì‰¬
         if (culNode->pRightChild)
         {
             stack_push(&stack, culNode->pRightChild);
@@ -220,20 +220,20 @@ void in_order(tNode* _pNode, char* _Arr)
 
     while (curNode || !stack_empty(&stack))
     {
-        // ¿ÞÂÊ ³¡±îÁö ³»·Á°¡¸é¼­ ½ºÅÃ¿¡ push
+        // ì™¼ìª½ ëê¹Œì§€ ë‚´ë ¤ê°€ë©´ì„œ ìŠ¤íƒì— push
         while (curNode)
         {
             stack_push(&stack, curNode);
             curNode = curNode->pLeftChild;
         }
 
-        // ¿ÞÂÊ ÀÚ½ÄÀÌ ¾ø´Â ³ëµå¸¦ ¸¸³ª¸é ¹æ¹®
+        // ì™¼ìª½ ìžì‹ì´ ì—†ëŠ” ë…¸ë“œë¥¼ ë§Œë‚˜ë©´ ë°©ë¬¸
         curNode = stack_top(&stack);
         stack_pop(&stack);
         _Arr[idx] = curNode->cData;
         ++idx;
 
-        // ¿À¸¥ÂÊ ÀÚ½ÄÀÖÀ¸¸é ¹Ýº¹
+        // ì˜¤ë¥¸ìª½ ìžì‹ìžˆìœ¼ë©´ ë°˜ë³µ
         curNode = curNode->pRightChild;
 
 
@@ -255,17 +255,17 @@ void post_order(tNode* _pNode, char* _Arr)
 
     while (curNode || !stack_empty(&stack))
     {
-        // ¿ÞÂÊ ³¡±îÁö ³»·Á°¡¸é¼­ ½ºÅÃ¿¡ push
+        // ì™¼ìª½ ëê¹Œì§€ ë‚´ë ¤ê°€ë©´ì„œ ìŠ¤íƒì— push
         while (curNode)
         {
             stack_push(&stack, curNode);
             curNode = curNode->pLeftChild;
         }
 
-        // ½ºÅÃ¿¡¼­ top È®ÀÎ
+        // ìŠ¤íƒì—ì„œ top í™•ì¸
         tNode* peekNode = stack_top(&stack);
 
-        // ¿À¸¥ÂÊ ÀÚ½ÄÀÌ ¾ø°Å³ª ÀÌ¹Ì ¹æ¹®ÇßÀ¸¸é Ãâ·Â
+        // ì˜¤ë¥¸ìª½ ìžì‹ì´ ì—†ê±°ë‚˜ ì´ë¯¸ ë°©ë¬¸í–ˆìœ¼ë©´ ì¶œë ¥
         if (!peekNode->pRightChild || peekNode->pRightChild == lastVisited)
         {
             _Arr[idx] = peekNode->cData;
@@ -275,7 +275,7 @@ void post_order(tNode* _pNode, char* _Arr)
         }
         else
         {
-            // ¿À¸¥ÂÊ ÀÚ½ÄÀ¸·Î ÀÌµ¿
+            // ì˜¤ë¥¸ìª½ ìžì‹ìœ¼ë¡œ ì´ë™
             curNode = peekNode->pRightChild;
         }
 
@@ -317,8 +317,11 @@ int main()
     post_order(root, postOrderArr);
     printf("post-order: ");
     iter(postOrderArr);
+	
+	release_tree(root);
 
-
+	
     return 0;
 }
+
 
