@@ -170,7 +170,7 @@ void release_tree(tNode* _culNode)
 
 }
 
-void pre_order(tNode* _pNode, char* _Arr)
+void pre_order(tNode* _pNode)
 {
     // NULL이면 반환
     if (!_pNode)
@@ -181,15 +181,15 @@ void pre_order(tNode* _pNode, char* _Arr)
     tStack stack = { 0 };
     stack_push(&stack, _pNode);
 
-    int idx = 0;
+	printf("pre-order: ");
 
     while (!stack_empty(&stack))
     {
         tNode* culNode = stack_top(&stack);
         stack_pop(&stack);
 
-        _Arr[idx] = culNode->cData;
-        ++idx;
+        printf("%c", culNode->cData);
+		printf(" ");
 
         //오른쪽 자식이 있다면 먼저 푸쉬
         if (culNode->pRightChild)
@@ -202,11 +202,12 @@ void pre_order(tNode* _pNode, char* _Arr)
         {
             stack_push(&stack, culNode->pLeftChild);
         }
-
     }
+	printf("\n");
 }
 
-void in_order(tNode* _pNode, char* _Arr)
+
+void in_order(tNode* _pNode)
 {
     if (!_pNode)
     {
@@ -216,7 +217,7 @@ void in_order(tNode* _pNode, char* _Arr)
     tStack stack = { 0 };
     tNode* curNode = _pNode;
 
-    int idx = 0;
+    printf("in-order: ");
 
     while (curNode || !stack_empty(&stack))
     {
@@ -230,28 +231,27 @@ void in_order(tNode* _pNode, char* _Arr)
         // 왼쪽 자식이 없는 노드를 만나면 방문
         curNode = stack_top(&stack);
         stack_pop(&stack);
-        _Arr[idx] = curNode->cData;
-        ++idx;
+        printf("%c", curNode->cData);
+		printf(" ");
 
-        // 오른쪽 자식있으면 반복
+        // 오른쪽 자식으로 이동
         curNode = curNode->pRightChild;
-
-
     }
+	printf("\n");
 }
 
-void post_order(tNode* _pNode, char* _Arr)
+void post_order(tNode* _pRootNode)
 {
-    if (!_pNode)
+    if (!_pRootNode)
     {
         return;
     }
 
     tStack stack = { 0 };
     tNode* lastVisited = NULL;
-    tNode* curNode = _pNode;
+    tNode* curNode = _pRootNode;
 
-    int idx = 0;
+	printf("post-order: ");
 
     while (curNode || !stack_empty(&stack))
     {
@@ -268,8 +268,9 @@ void post_order(tNode* _pNode, char* _Arr)
         // 오른쪽 자식이 없거나 이미 방문했으면 출력
         if (!peekNode->pRightChild || peekNode->pRightChild == lastVisited)
         {
-            _Arr[idx] = peekNode->cData;
-            ++idx;
+            printf("%c", peekNode->cData);
+			printf(" ");
+           
             lastVisited = peekNode;
             stack_pop(&stack);
         }
@@ -280,15 +281,20 @@ void post_order(tNode* _pNode, char* _Arr)
         }
 
     }
+	printf("\n");
 }
 
-void iter(char* _CArr) 
+void tree_array(tNode* _culNode, char* _cTreeArr, int _idx)
 {
-    for (size_t i = 0; i < strlen(_CArr); ++i)
+    if (!_culNode || _idx >= 1000)
     {
-        printf("%c ", _CArr[i]);
+        return;
     }
-    printf("\n");
+
+    _cTreeArr[_idx] = _culNode->cData;
+
+    tree_array(_culNode->pLeftChild, _cTreeArr, _idx * 2);
+    tree_array(_culNode->pRightChild, _cTreeArr, _idx * 2 + 1);
 }
 
 
@@ -303,25 +309,24 @@ int main()
 
     tNode* root = build_tree(buf);
 
-    char preOrderArr[1000] = { 0 };
-    pre_order(root, preOrderArr);
-    printf("pre-order: ");
-    iter(preOrderArr);
+    //배열트리 구현
+	char cTreeArr[1000] = { 0 };
+	tree_array(root, cTreeArr, 1); 
+    
+    // 순회 구현
+    pre_order(root);
+    
+    in_order(root);
+    
+    post_order(root);
+    
+   
+    
+    release_tree(root);
 
-    char inOrderArr[1000] = { 0 };
-    in_order(root, inOrderArr);
-    printf("in-order: ");
-	iter(inOrderArr);
 
-    char postOrderArr[1000] = { 0 };
-    post_order(root, postOrderArr);
-    printf("post-order: ");
-    iter(postOrderArr);
-	
-	release_tree(root);
 
-	
     return 0;
-}
+}                
 
 
